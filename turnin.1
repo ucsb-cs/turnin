@@ -1,0 +1,129 @@
+.TH turnin 1 "10 Oct 1993"
+.SH NAME
+.sp
+turnin \- CS turnin program
+.SH SYNOPSIS
+.sp
+.B turnin
+assignment@class file-and-directory-list
+.sp
+.SH DESCRIPTION
+.sp
+.LP
+.B turnin
+is the standard command available for turning in Computer Science assignments.
+.LP
+.B NOTE:
+This command is currently only available under SunOS 5 systems in CS.
+.LP
+\fBHowever, check with your instructor or TA to be sure how you are supposed
+to turn in assignments for your particular class.\fR
+.sp
+.SH STUDENT USAGE
+.sp
+.LP
+Simply type
+.sp
+.ce
+\fBturnin assignmnt@class files-and-directories\fR
+.LP
+If you see a message
+\fICommand not found\fR, type \fI/usr/compsci/bin/turnin\fR instead
+of \fIturnin\fR.
+.LP
+.sp
+.I assignment
+and
+.I class
+are the assignment name (e.g. pgm1, lab3, hw2, etc) and turnin
+account name (e.g. cs22, cs130a).
+.I file-and-directory-list
+is the list of files and directories that you wish to turnin.
+.LP
+The
+.B turnin
+program refuses to turn in binary files, and has other miscellaneous
+constraints which it announces as needed.
+.LP
+You can make multiple turnins of each assignment (up to a limit), but
+you should follow the specific rules given by your instructor.
+.sp
+.SH INSTRUCTOR USAGE
+.sp
+.LP
+To have your students use this version of turnin, you must create
+a subdirectory
+.B TURNIN
+in the home directory of your class account.  For each assignment
+create a subdirectory
+.B TURNIN/assignment
+for each
+.I assignment
+name you give out.  Assignment names are arbitrary, but your students
+need to know the names you give to each assignment.
+.LP
+There are several files that you can create within the assignment
+directory to control aspects of
+.B turnin's
+operation:
+.LP
+.B README
+is printed out for the user at the beginning of the turnin.  It can be
+used to provide special instructions or reminders to the user.
+.LP
+.B LOCK
+will disable turnins of the particular assignment.
+.LP
+.B LOGFILE
+keeps tracks of each turnin.
+.LP
+.B LIMITS
+contains lines which specify keywords and values:
+.IP
+maxfiles 100
+.IP
+maxkbytes 1000
+.IP
+maxturnins 10
+.IP
+binary 0
+.LP
+that will set limits on how many files, how large the turnin can be,
+how many turnins can be made of each assignment and a boolean value
+to denote whether binary files are allowed to be turned in.  (The default
+values are shown above).  Note that if you allow binary files, you 
+should only run them when you are logged in as the class account, and 
+even then only if there is no confidential information in the account.
+.LP
+Occasionally you may find files beginning with '#'.  These represent
+failed turnins.
+.LP
+Turned-in assignments are named
+\fIuser\fR.tar.Z
+where user is the name of the user executing turnin.  Previous
+versions of each turnin are named
+\fIuser\fR-\fBN\fR.tar.Z
+where increasing \fBN\fR represents more recent versions.
+.LP
+To access a turnin of \fIpgm1\fR by \fIuser\fR,
+.IP
+cd TURNIN/pgm1
+.IP
+mkdir tmp
+.IP
+cd tmp
+.IP
+zcat ../user.tar.Z | tar xvBf -
+.LP
+which will unpack the students turned-in assignment.
+.sp
+.SH "RETURN VALUES"
+.sp
+.B turnin
+generates lots of error messages.
+.SH FILES
+.sp
+.PD 0
+.TP 20
+.B ~class/TURNIN/assignment/
+.PD
