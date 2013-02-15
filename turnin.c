@@ -12,6 +12,11 @@
  * Now, it works something like this:
  * su user tar cf - assignment | su class gzip > /tmp/file; mv /tmp/file ~class/TURNIN/assignment 
  *
+ * 2010-11-04  Bryce Boe <bboe@cs.ucsb.edu>
+ *            - Fixed ".." and "." in project name bug.
+ *            - Also added exit(1) for user aborted exits.
+ *
+ *
  * Instructor creates subdirectory TURNIN in home directory of the class
  * account.  For each assignment, a further subdirectory must be created
  * bearing the name of the assignment (e.g.  ~cs162/TURNIN/pgm2).
@@ -233,6 +238,12 @@ char *arg;
 	strcat(assignment_path, "/");
 	assignment_file = assignment_path + i - 1;
 
+	/* To prevent ..(/folder) and .(/folder) this check was added -- bboe */
+	if (strstr(assignment_path, "./") != NULL) {
+	  fprintf(stderr, "turnin: \"..\" and \".\" not allowed in project name\n");
+	  exit(1);
+	}
+
     /* first, we will gzip out to tmp directory, then move it to class directory */
     tmp_dir = (char *)malloc(strlen("/tmp"));
     strcpy(tmp_dir, "/tmp");
@@ -380,7 +391,7 @@ char *arg;
 		}
 		if (c == 'n') {
 			fprintf(stderr, "\n**** ABORTING TURNIN ****\n");
-			exit(0);
+			exit(1);
 		}
 
 		/* compute next version name */
@@ -623,7 +634,7 @@ wanttocontinue()
 	}
 	if (c == 'n') {
 		fprintf(stderr, "\n**** ABORTING TURNIN ****\n");
-		exit(0);
+		exit(1);
 	}
 }
 
