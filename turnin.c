@@ -13,9 +13,12 @@
  * su user tar cf - assignment | su class gzip > /tmp/file; mv /tmp/file ~class/TURNIN/assignment 
  *
  * 2010-11-04  Bryce Boe <bboe@cs.ucsb.edu>
- *            - Fixed ".." and "." in project name bug.
- *            - Also added exit(1) for user aborted exits.
+ *    - Fixed ".." and "." in project name bug.
+ *    - Also added exit(1) for user aborted exits.
  *
+ * 2013-02-15  Bryce Boe <bboe@cs.ucsb.edu>
+ *    - Check for EOF on input prompts to fix 100% CPU zombie processes bug
+ *    - Reuse `wanttocontinue` for "already submitted prompt"
  *
  * Instructor creates subdirectory TURNIN in home directory of the class
  * account.  For each assignment, a further subdirectory must be created
@@ -374,26 +377,8 @@ char *arg;
 	finalfile = strdup(assignment_path);
 
 	if (lstat(finalfile, &statb) != -1) {
-		static char b[10];
-		char c;
-
 		fprintf(stderr, "\n\n*** You have already turned in %s\n", assignment);
-		fprintf(stderr, "\n*** Do you want to turn it in again? ");
-
-		(void) fgets(b, sizeof(b)-1, stdin);
-		c = tolower(b[0]);
-		while (c != 'y' && c != 'n') {
-			(void) clearerr(stdin);
-			fprintf(stderr, "\n*** Please enter 'y' or 'n'.\n");
-			fprintf(stderr, "\n*** Do you want to turn %s in again? ",
-																assignment);
-			(void) fgets(b, sizeof(b)-1, stdin);
-			c = tolower(b[0]);
-		}
-		if (c == 'n') {
-			fprintf(stderr, "\n**** ABORTING TURNIN ****\n");
-			exit(1);
-		}
+		wanttocontinue();
 
 		/* compute next version name */
 		for (saveturnin = 1;  saveturnin <= maxturnins;  saveturnin++) {
@@ -624,13 +609,15 @@ wanttocontinue()
 
 	fprintf(stderr, "\n*** Do you want to continue? ");
 
-	(void) fgets(b, sizeof(b)-1, stdin);
+	if (fgets(b, sizeof(b)-1, stdin) == NULL)
+		exit(1);
 	c = tolower(b[0]);
 	while (c != 'y' && c != 'n') {
 		(void) clearerr(stdin);
 		fprintf(stderr, "\n*** Please enter 'y' or 'n'.\n");
 		fprintf(stderr, "\n*** Do you want to continue? ");
-		(void) fgets(b, sizeof(b)-1, stdin);
+		if (fgets(b, sizeof(b)-1, stdin) == NULL)
+			exit(1);
 		c = tolower(b[0]);
 	}
 	if (c == 'n') {
