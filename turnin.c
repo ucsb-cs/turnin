@@ -2,15 +2,16 @@
  * 1993 version of the turnin program originally written by Paul Eggert
  *
  * Rewritten October 1993 by probert@cs.ucsb.edu
- * 
+ *
  * Fixed Y2K bug in logging.  Andy Pippin <abp.cs.ucsb.edu>
  *
- * version 1.3: fix sprintf buffer overflow in writelog() - Jeff Sheltren <sheltren@cs.ucsb.edu>
- * Security flaw found by Stefan Karpinski <sgk@cs.ucsb.edu>
+ * version 1.3: fix sprintf buffer overflow in writelog() - Jeff Sheltren
+ * <sheltren@cs.ucsb.edu> Security flaw found by Stefan Karpinski
+ * <sgk@cs.ucsb.edu>
  *
- * v1.4: change functionality to work with newer NFS versions - Jeff Sheltren <sheltren@cs.ucsb.edu>
- * Now, it works something like this:
- * su user tar cf - assignment | su class gzip > /tmp/file; mv /tmp/file ~class/TURNIN/assignment 
+ * v1.4: change functionality to work with newer NFS versions - Jeff Sheltren
+ * <sheltren@cs.ucsb.edu> Now, it works something like this:
+ * su user tar cf - assignment | su class gzip > /tmp/file; mv /tmp/file ~class/TURNIN/assignment
  *
  * 2010-11-04  Bryce Boe <bboe@cs.ucsb.edu>
  *    - Fixed ".." and "." in project name bug.
@@ -24,36 +25,35 @@
  * account.  For each assignment, a further subdirectory must be created
  * bearing the name of the assignment (e.g.  ~cs162/TURNIN/pgm2).
  *
- * If the assignment directory contains the file 'LOCK' turnins will
- * not be accepted.
+ * If the assignment directory contains the file 'LOCK' turnins will not be
+ * accepted.
  *
  * If there is a file 'LIMITS', it is examined for lines like:
  *
- *		maxfiles	100
- *		maxkbytes	1000
- *		maxturnins	10
- *		binary		1
+ *    maxfiles   100
+ *    maxkbytes  1000
+ *    maxturnins 10
+ *    binary     1
  *
- * which are used to modify the default values governing student turnins
- * of assignments (the default values are shown above).
+ * which are used to modify the default values governing student turnins of
+ * assignments (the default values are shown above).
  *
  * User files are saved in compressed tar images in the assignment
  * subdirectory.  The most recent version for each student is named
  *
- *		user.tar.Z
+ *    user.tar.Z
  *
- * previously turned versions are called user-N.tar.Z, where higher
- * N refer to more recent turnins.  At most MAXTURNINS can be made
- * for each assignment.
+ * previously turned versions are called user-N.tar.Z, where higher N refer to
+ * more recent turnins.  At most MAXTURNINS can be made for each assignment.
  *
- * If there is a file README in the turnin directory, it is printed
- * when the user runs turnin.
+ * If there is a file README in the turnin directory, it is printed when the
+ * user runs turnin.
  *
  * The file LOGFILE is appended for each turnin.
  *
  * As far as the user is concerned, the syntax is simply:
  *
- *		turnin  assignmt@class   files-and-directories
+ *    turnin  assignmt@class   files-and-directories
  */
 
 #include <stdio.h>
